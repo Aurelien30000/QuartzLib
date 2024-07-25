@@ -37,6 +37,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
@@ -51,6 +52,7 @@ public class PromptGui extends GuiBase {
 
     private final Callback<String> callback;
     private Location signLocation;
+    private BlockState signBlockState;
     private String contents;
 
 
@@ -165,17 +167,10 @@ public class PromptGui extends GuiBase {
     protected void open(final Player player) {
         super.open(player);
 
-        signLocation = findAvailableLocation(player);
-
-        if (signLocation == null) {
-            throw new RuntimeException("Too many players are using a PromptGui at the same time."
-                    + " (…wait, the limit is about 7500, how did you do that??)");
-        }
-
-        // Ugly workaround for spigot still applying physics in spigot 1.9.2+
-        signLocation.getWorld().getBlockAt(signLocation.clone().add(0, -1, 0)).setType(Material.GLASS);
+        signLocation = player.getLocation();
 
         final Block block = signLocation.getWorld().getBlockAt(signLocation);
+        signBlockState = block.getState();
 
         block.setType(Material.OAK_SIGN, false);
 
@@ -189,6 +184,9 @@ public class PromptGui extends GuiBase {
 
     @Override
     protected void onClose() {
+        final BlockState blockState = signBlockState.copy(signLocation);
+        blockState.update(true);
+
         super.onClose();
     }
 
