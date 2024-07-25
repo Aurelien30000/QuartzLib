@@ -54,8 +54,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//import org.bukkit.Sound;
-
 /**
  * Utility class for dealing with items and inventories.
  */
@@ -157,25 +155,6 @@ public abstract class ItemUtils {
     }
 
     /**
-     * Checks if two item stacks are similar, by checking the type, data and display name (if set).
-     *
-     * @param first An item stack. Can be {@code null}.
-     * @param other Another item stack. Can be {@code null}.
-     * @return {@code true} if similar (either both {@code null} or similar).
-     */
-    public static boolean areSimilar(ItemStack first, ItemStack other) {
-        if (first == null || other == null) {
-            return first == other;
-        }
-
-        return first.getType() == other.getType()
-                && first.getData().equals(other.getData())
-                && ((!first.hasItemMeta() && !other.hasItemMeta())
-                || (!first.getItemMeta().hasDisplayName() && !other.getItemMeta().hasDisplayName())
-                || (first.getItemMeta().getDisplayName().equals(other.getItemMeta().getDisplayName())));
-    }
-
-    /**
      * Checks if an item stack have the given display name.
      *
      * @param stack       An item stack. Can be {@code null}.
@@ -210,7 +189,7 @@ public abstract class ItemUtils {
         }
 
         int newDurability = ((Damageable) meta).getDamage();
-        newDurability += newDurability(item.getEnchantmentLevel(Enchantment.DURABILITY)) * factor;
+        newDurability += newDurability(item.getEnchantmentLevel(Enchantment.UNBREAKING)) * factor;
 
         if (newDurability >= item.getType().getMaxDurability()) {
             InventoryUtils.breakItemInHand(player, item);

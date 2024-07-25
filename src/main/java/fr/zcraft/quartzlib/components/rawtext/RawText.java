@@ -31,21 +31,10 @@
 package fr.zcraft.quartzlib.components.rawtext;
 
 import com.google.common.base.CaseFormat;
-import fr.zcraft.quartzlib.components.nbt.NBT;
-import fr.zcraft.quartzlib.tools.PluginLogger;
-import fr.zcraft.quartzlib.tools.items.ItemUtils;
-import fr.zcraft.quartzlib.tools.reflection.NMSException;
 import fr.zcraft.quartzlib.tools.text.ChatColorParser;
 import fr.zcraft.quartzlib.tools.text.ChatColoredString;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.ChatColor;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONObject;
 
 
@@ -183,61 +172,6 @@ public class RawText extends RawTextPart<RawText> {
             default:
                 return color.name().toLowerCase();
         }
-    }
-
-    /**
-     * Converts an item name to a tellraw-compatible JSON.
-     *
-     * @param item The item.
-     * @return The tellraw-compatible JSON.
-     */
-    public static String toJSONString(ItemStack item) {
-        Map<String, Object> itemData = new HashMap<>();
-
-        String itemId = null;
-        try {
-            itemId = ItemUtils.getMinecraftId(item);
-        } catch (NMSException ex) {
-            PluginLogger.warning("NMS Exception while parsing ItemStack to JSON String", ex);
-        }
-
-        if (itemId == null) {
-            itemId = String.valueOf(item.getType().getId());
-        }
-
-        itemData.put("id", itemId);
-        itemData.put("Damage", item.getDurability());
-        itemData.put("Count", item.getAmount());
-
-        try {
-            itemData.put("tag", NBT.fromItemStack(item));
-        } catch (NMSException ex) {
-            PluginLogger.warning("Unable to retrieve NBT data", ex);
-            Map<String, Object> tag = new HashMap<>();
-
-            tag.put("display", NBT.fromItemMeta(item.getItemMeta()));
-            tag.put("ench", NBT.fromEnchantments(item.getEnchantments()));
-            tag.put("HideFlags", NBT.fromItemFlags(item.getItemMeta().getItemFlags()));
-
-            itemData.put("tag", tag);
-        }
-
-        return NBT.toNBTJSONString(itemData);
-    }
-
-    @Deprecated
-    public static String toJSONString(ItemMeta meta) {
-        return NBT.toNBTJSONString(NBT.fromItemMeta(meta));
-    }
-
-    @Deprecated
-    public static String toJSONString(Map<Enchantment, Integer> enchants) {
-        return NBT.toNBTJSONString(NBT.fromEnchantments(enchants));
-    }
-
-    @Deprecated
-    public static byte toJSON(Set<ItemFlag> itemFlags) {
-        return NBT.fromItemFlags(itemFlags);
     }
 
     /**

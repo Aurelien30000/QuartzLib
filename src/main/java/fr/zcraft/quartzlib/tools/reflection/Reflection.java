@@ -30,7 +30,6 @@
 
 package fr.zcraft.quartzlib.tools.reflection;
 
-import fr.zcraft.quartzlib.tools.PluginLogger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -55,15 +54,6 @@ public final class Reflection {
     }
 
     /**
-     * Returns the Bukkit's current version, as read in the Bukkit's package name.
-     *
-     * @return The Bukkit's version in the package name.
-     */
-    public static String getBukkitPackageVersion() {
-        return getBukkitPackageName().substring("org.bukkit.craftbukkit.".length());
-    }
-
-    /**
      * Returns the full name of the root Bukkit package: something like
      * "org.bukkit.craftbukkit.v1_8_R3".
      *
@@ -79,7 +69,7 @@ public final class Reflection {
      * @return the full name of the root NMS package.
      */
     public static String getMinecraftPackageName() {
-        return "net.minecraft.server." + getBukkitPackageVersion();
+        return "net.minecraft.server.";
     }
 
     /**

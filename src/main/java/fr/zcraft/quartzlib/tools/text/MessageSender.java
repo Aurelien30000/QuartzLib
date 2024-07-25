@@ -42,7 +42,6 @@ import org.bukkit.entity.Player;
 
 
 public final class MessageSender {
-    private static final String nmsVersion = Reflection.getBukkitPackageVersion();
     private static boolean enabled = true;
     private static Class<?> packetPlayOutChatClass;
     private static Class<?> chatSerializerClass;
@@ -64,30 +63,27 @@ public final class MessageSender {
             chatSerializerClass =
                     Reflection.getMinecraft1_17ClassByName("network.chat.IChatBaseComponent$ChatSerializer");
 
+            chatComponentTextClass = Reflection.getMinecraft1_17ClassByName("network.chat.ChatComponentText");
 
-            if (!nmsVersion.equalsIgnoreCase("v1_8_R1")) {
-                chatComponentTextClass = Reflection.getMinecraft1_17ClassByName("network.chat.ChatComponentText");
+            // This enum was introduced in 1.12;  before, a byte was directly used.
+            try {
+                chatMessageTypeEnum = Reflection.getMinecraft1_17ClassByName("network.chat.ChatMessageType");
+                chatMessageByteToTypeMethod = Reflection.findMethod(chatMessageTypeEnum, "a", byte.class);
 
-                // This enum was introduced in 1.12;  before, a byte was directly used.
-                try {
-                    chatMessageTypeEnum = Reflection.getMinecraft1_17ClassByName("network.chat.ChatMessageType");
-                    chatMessageByteToTypeMethod = Reflection.findMethod(chatMessageTypeEnum, "a", byte.class);
+                if (chatMessageByteToTypeMethod == null) {
+                    PluginLogger
+                            .error("You are using a version of Minecraft ({0}) incompatible with QuartzLib.",
+                                    Bukkit.getBukkitVersion());
+                    PluginLogger.error("The MessageSender component will not work"
+                            + "due to a change in Minecraft code.");
+                    PluginLogger.error("Please report this to the QuartzLib developers"
+                            + "at https://github.com/zDevelopers/QuartzLib/issues, thanks!");
 
-                    if (chatMessageByteToTypeMethod == null) {
-                        PluginLogger
-                                .error("You are using a version of Minecraft ({0}) incompatible with QuartzLib.",
-                                        nmsVersion);
-                        PluginLogger.error("The MessageSender component will not work"
-                                + "due to a change in Minecraft code.");
-                        PluginLogger.error("Please report this to the QuartzLib developers"
-                                + "at https://github.com/zDevelopers/QuartzLib/issues, thanks!");
-
-                        chatMessageTypeEnum = null;
-                    }
-                } catch (ClassNotFoundException e) {
                     chatMessageTypeEnum = null;
-                    chatMessageByteToTypeMethod = null;
                 }
+            } catch (ClassNotFoundException e) {
+                chatMessageTypeEnum = null;
+                chatMessageByteToTypeMethod = null;
             }
 
 
@@ -120,29 +116,27 @@ public final class MessageSender {
                 }
 
                 // We only support 1.8+
-                if (!nmsVersion.equalsIgnoreCase("v1_8_R1")) {
-                    chatComponentTextClass = Reflection.getMinecraftClassByName("ChatComponentText");
+                chatComponentTextClass = Reflection.getMinecraftClassByName("ChatComponentText");
 
-                    // This enum was introduced in 1.12;  before, a byte was directly used.
-                    try {
-                        chatMessageTypeEnum = Reflection.getMinecraftClassByName("ChatMessageType");
-                        chatMessageByteToTypeMethod = Reflection.findMethod(chatMessageTypeEnum, "a", byte.class);
+                // This enum was introduced in 1.12;  before, a byte was directly used.
+                try {
+                    chatMessageTypeEnum = Reflection.getMinecraftClassByName("ChatMessageType");
+                    chatMessageByteToTypeMethod = Reflection.findMethod(chatMessageTypeEnum, "a", byte.class);
 
-                        if (chatMessageByteToTypeMethod == null) {
-                            PluginLogger
-                                    .error("You are using a version of Minecraft ({0}) incompatible with QuartzLib.",
-                                            nmsVersion);
-                            PluginLogger.error("The MessageSender component will not work"
-                                    + "due to a change in Minecraft code.");
-                            PluginLogger.error("Please report this to the QuartzLib developers"
-                                    + "at https://github.com/zDevelopers/QuartzLib/issues, thanks!");
+                    if (chatMessageByteToTypeMethod == null) {
+                        PluginLogger
+                                .error("You are using a version of Minecraft ({0}) incompatible with QuartzLib.",
+                                        Bukkit.getBukkitVersion());
+                        PluginLogger.error("The MessageSender component will not work"
+                                + "due to a change in Minecraft code.");
+                        PluginLogger.error("Please report this to the QuartzLib developers"
+                                + "at https://github.com/zDevelopers/QuartzLib/issues, thanks!");
 
-                            chatMessageTypeEnum = null;
-                        }
-                    } catch (ClassNotFoundException e) {
                         chatMessageTypeEnum = null;
-                        chatMessageByteToTypeMethod = null;
                     }
+                } catch (ClassNotFoundException e) {
+                    chatMessageTypeEnum = null;
+                    chatMessageByteToTypeMethod = null;
                 }
 
                 // For 1.12+,
@@ -549,52 +543,44 @@ public final class MessageSender {
         Object chatPacket = null;
 
         try {
-            if (nmsVersion.equalsIgnoreCase("v1_8_R1")) {
-                Object baseComponent = iChatBaseComponentClass
-                        .cast(Reflection.call(chatSerializerClass, chatSerializerClass, "a", content));
-                chatPacket =
-                        Reflection
-                                .instantiate(packetPlayOutChatClass, baseComponent, type.getMessagePositionByte());
+            Object componentText;
+
+            if (type.isJSON()) {
+                componentText =
+                        iChatBaseComponentClass
+                                .cast(Reflection.call(chatSerializerClass, "a", (Object) content));
             } else {
-                Object componentText;
+                componentText = Reflection.instantiate(chatComponentTextClass, content);
+            }
 
-                if (type.isJSON()) {
-                    componentText =
-                            iChatBaseComponentClass
-                                    .cast(Reflection.call(chatSerializerClass, "a", (Object) content));
-                } else {
-                    componentText = Reflection.instantiate(chatComponentTextClass, content);
-                }
-
-                // For Minecraft 1.12+, we cannot send action bars using chat packets, as their JSON formatting is
-                // ignored due to a bug (MC-119145). So, if possible, we use an alternative way of sending them using
-                // the Title packet.
-                if (type == MessageType.ACTION_BAR && packetPlayOutTitleClass != null) {
-                    chatPacket = packetPlayOutTitleClass
-                            .getConstructor(actionBarTitleActionEnum.getClass(), iChatBaseComponentClass)
-                            .newInstance(actionBarTitleActionEnum, componentText);
-                } else {
-                    final Enum<?> nmsMessageType = type.getMessagePositionEnumValue();
-                    if (nmsMessageType != null) {
-                        try {
-                            // 1.16.1+ chat packets constructor require an UUID. To send
-                            // system messages, we need to give a null UUID (else the message
-                            // will be filtered if the player disabled chat messages on their
-                            // client).
-                            chatPacket = packetPlayOutChatClass
-                                    .getConstructor(iChatBaseComponentClass, chatMessageTypeEnum, UUID.class)
-                                    .newInstance(componentText, nmsMessageType, new UUID(0, 0));
-
-                        } catch (NoSuchMethodException ex) {
-                            chatPacket = packetPlayOutChatClass
-                                    .getConstructor(iChatBaseComponentClass, chatMessageTypeEnum)
-                                    .newInstance(componentText, nmsMessageType);
-                        }
-                    } else {
+            // For Minecraft 1.12+, we cannot send action bars using chat packets, as their JSON formatting is
+            // ignored due to a bug (MC-119145). So, if possible, we use an alternative way of sending them using
+            // the Title packet.
+            if (type == MessageType.ACTION_BAR && packetPlayOutTitleClass != null) {
+                chatPacket = packetPlayOutTitleClass
+                        .getConstructor(actionBarTitleActionEnum.getClass(), iChatBaseComponentClass)
+                        .newInstance(actionBarTitleActionEnum, componentText);
+            } else {
+                final Enum<?> nmsMessageType = type.getMessagePositionEnumValue();
+                if (nmsMessageType != null) {
+                    try {
+                        // 1.16.1+ chat packets constructor require an UUID. To send
+                        // system messages, we need to give a null UUID (else the message
+                        // will be filtered if the player disabled chat messages on their
+                        // client).
                         chatPacket = packetPlayOutChatClass
-                                .getConstructor(iChatBaseComponentClass, byte.class)
-                                .newInstance(componentText, type.getMessagePositionByte());
+                                .getConstructor(iChatBaseComponentClass, chatMessageTypeEnum, UUID.class)
+                                .newInstance(componentText, nmsMessageType, new UUID(0, 0));
+
+                    } catch (NoSuchMethodException ex) {
+                        chatPacket = packetPlayOutChatClass
+                                .getConstructor(iChatBaseComponentClass, chatMessageTypeEnum)
+                                .newInstance(componentText, nmsMessageType);
                     }
+                } else {
+                    chatPacket = packetPlayOutChatClass
+                            .getConstructor(iChatBaseComponentClass, byte.class)
+                            .newInstance(componentText, type.getMessagePositionByte());
                 }
             }
             NMSNetwork.sendPacket(receiver, chatPacket);
@@ -677,13 +663,7 @@ public final class MessageSender {
          * @return {@code true} if the chat packet wants a JSON-formatted message, {@code false} else.
          */
         public boolean isJSON() {
-            if (isJson) {
-                return true;
-            } else if (this == ACTION_BAR) { // Action bar is JSON for 1.9+
-                return !nmsVersion.contains("v1_8");
-            } else {
-                return false;
-            }
+            return isJson;
         }
     }
 }

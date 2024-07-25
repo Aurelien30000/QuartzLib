@@ -68,7 +68,7 @@ public class GlowEffect extends QuartzComponent {
      * @return an instance of the fake enchantment.
      */
     private static Enchantment getGlow() {
-        return Enchantment.DURABILITY;
+        return Enchantment.UNBREAKING;
     }
 
     /**

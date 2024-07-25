@@ -43,18 +43,20 @@ import java.util.IllformedLocaleException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.block.banner.Pattern;
-import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.potion.Potion;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -466,8 +468,8 @@ public abstract class ConfigurationValueHandlers {
         boolean requiresCraftItem = false;
 
         if (material.equals(Material.POTION)) {
-            Potion potion = handlePotionValue(map);
-            item = new ItemStackBuilder(potion.toItemStack(amount));
+            ItemStackBuilder potion = handlePotionValue(map);
+            item = potion.amount(amount);
         } else {
             item = new ItemStackBuilder(material, amount);
         }
@@ -508,17 +510,19 @@ public abstract class ConfigurationValueHandlers {
      */
     @ConfigurationValueHandler
     @Deprecated
-    public static Potion handlePotionValue(Map map) throws ConfigurationParseException {
+    public static ItemStackBuilder handlePotionValue(Map map) throws ConfigurationParseException {
         if (!map.containsKey("effect")) {
             throw new ConfigurationParseException("Potion effect is required.", map);
         }
 
         PotionType type = handleEnumValue(map.get("effect"), PotionType.class);
-        int level = map.containsKey("level") ? handleByteValue(map.get("level")) : 1;
         boolean splash = map.containsKey("splash") && handleBoolValue(map.get("splash"));
-        boolean extended = map.containsKey("extended") && handleBoolValue(map.get("extended"));
 
-        return new Potion(type, level, splash, extended);
+        return new ItemStackBuilder(splash
+                ? Material.SPLASH_POTION
+                : Material.POTION
+        ).withMeta((Consumer<PotionMeta>) potionMeta ->
+                potionMeta.setBasePotionType(type));
     }
 
     /**
@@ -565,7 +569,7 @@ public abstract class ConfigurationValueHandlers {
                     map.containsKey("has-icon") && handleBoolValue(map.get("has-icon"))
             );
         } catch (NoSuchMethodException | InstantiationException
-                | IllegalAccessException | InvocationTargetException ex) {
+                 | IllegalAccessException | InvocationTargetException ex) {
             // 1.9 - 1.12: we can specify a color.
             try {
                 return Reflection.instantiate(PotionEffect.class,
@@ -577,7 +581,7 @@ public abstract class ConfigurationValueHandlers {
                         color != null ? Color.fromRGB(color) : null
                 );
             } catch (NoSuchMethodException | InstantiationException
-                    | IllegalAccessException | InvocationTargetException e) {
+                     | IllegalAccessException | InvocationTargetException e) {
                 // This one should always work.
                 return new PotionEffect(
                         effect,
@@ -620,11 +624,10 @@ public abstract class ConfigurationValueHandlers {
      */
     @ConfigurationValueHandler
     public static BannerMeta handleBannerValue(final Map map) throws ConfigurationParseException {
-        final BannerMeta banner = (BannerMeta) new ItemStack(Material.WHITE_BANNER).getItemMeta();
         final DyeColor baseColor = getValue(map, "color", DyeColor.BLACK);
+        final Material material = Material.valueOf(baseColor.name() + "_BANNER");
+        final BannerMeta banner = (BannerMeta) new ItemStack(material).getItemMeta();
         final List<?> patterns = getListValue(map, "patterns", new ArrayList<>(), Object.class);
-
-        banner.setBaseColor(baseColor);
 
         for (Object rawPattern : patterns) {
             Map<String, Object> mapPattern =
@@ -632,7 +635,10 @@ public abstract class ConfigurationValueHandlers {
 
             DyeColor patternColor = getValue(mapPattern, "color", DyeColor.BLACK);
             String patternName = getValue(mapPattern, "pattern", "");
-            banner.addPattern(new Pattern(patternColor, PatternType.getByIdentifier(patternName)));
+            banner.addPattern(new Pattern(
+                    patternColor,
+                    Registry.BANNER_PATTERN.get(NamespacedKey.minecraft(patternName))
+            ));
         }
 
         return banner;

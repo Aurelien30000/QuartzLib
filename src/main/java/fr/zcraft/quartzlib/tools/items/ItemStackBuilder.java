@@ -31,8 +31,6 @@
 package fr.zcraft.quartzlib.tools.items;
 
 import fr.zcraft.quartzlib.components.gui.GuiUtils;
-import fr.zcraft.quartzlib.components.nbt.NBT;
-import fr.zcraft.quartzlib.components.nbt.NBTCompound;
 import fr.zcraft.quartzlib.components.rawtext.RawText;
 import fr.zcraft.quartzlib.components.rawtext.RawTextPart;
 import fr.zcraft.quartzlib.tools.PluginLogger;
@@ -258,13 +256,7 @@ public class ItemStackBuilder {
     public ItemStack craftItem() {
         final ItemStack bukkitItem = item();
         try {
-            ItemStack craftCopy = (ItemStack) ItemUtils.asCraftCopy(bukkitItem);
-
-            if (nbt != null && !nbt.isEmpty()) {
-                craftCopy = NBT.addToItemStack(craftCopy, nbt, replaceNbt);
-            }
-
-            return craftCopy;
+            return (ItemStack) ItemUtils.asCraftCopy(bukkitItem);
         } catch (NMSException ex) {
             PluginLogger.warning("CraftItem failed", ex);
             return bukkitItem;

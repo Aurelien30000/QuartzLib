@@ -56,202 +56,208 @@ public final class TextualBanners {
      * The map containing all the supported characters. White color represents the background and
      * black color the font color.
      */
-    private static final Map<Character, BannerMeta> chars = new HashMap<>();
+    private static final Map<Character, ItemStack> chars = new HashMap<>();
 
     static {
-        chars.put('a', getBannerMeta(DyeColor.WHITE,
+        chars.put('a', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_TOP, PatternType.STRIPE_LEFT, PatternType.STRIPE_RIGHT,
                         PatternType.STRIPE_MIDDLE)));
-        chars.put('b', getBannerMeta(DyeColor.WHITE,
+        chars.put('b', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_TOP, PatternType.STRIPE_LEFT, PatternType.STRIPE_RIGHT,
                         PatternType.STRIPE_MIDDLE, PatternType.STRIPE_BOTTOM)));
-        chars.put('c', getBannerMeta(DyeColor.WHITE,
+        chars.put('c', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_LEFT, PatternType.STRIPE_TOP,
                         PatternType.STRIPE_BOTTOM)));
-        chars.put('d', getBannerMeta(DyeColor.BLACK,
-                Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.RHOMBUS_MIDDLE),
+        chars.put('d', getBanner(Material.BLACK_BANNER,
+                Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.RHOMBUS),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT))));
-        chars.put('e', getBannerMeta(DyeColor.WHITE,
+        chars.put('e', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
                         new Pattern(DyeColor.WHITE, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT))));
-        chars.put('f', getBannerMeta(DyeColor.WHITE,
+        chars.put('f', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
                         new Pattern(DyeColor.WHITE, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP))));
-        chars.put('g', getBannerMeta(DyeColor.WHITE,
+        chars.put('g', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP))));
-        chars.put('h', getBannerMeta(DyeColor.BLACK, Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.STRIPE_TOP),
-                new Pattern(DyeColor.WHITE, PatternType.STRIPE_BOTTOM),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
-        chars.put('i', getBannerMeta(DyeColor.WHITE,
+        chars.put('h', getBanner(Material.BLACK_BANNER,
+                Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.STRIPE_TOP),
+                        new Pattern(DyeColor.WHITE, PatternType.STRIPE_BOTTOM),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
+        chars.put('i', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_BOTTOM, PatternType.STRIPE_TOP,
                         PatternType.STRIPE_CENTER)));
-        chars.put('j', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
-                new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
-        chars.put('k', getBannerMeta(DyeColor.WHITE,
+        chars.put('j', getBanner(Material.WHITE_BANNER,
+                Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
+                        new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
+        chars.put('k', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
                         new Pattern(DyeColor.WHITE, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT))));
-        chars.put('l', getBannerMeta(DyeColor.WHITE,
+        chars.put('l', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_LEFT, PatternType.STRIPE_BOTTOM)));
-        chars.put('m', getBannerMeta(DyeColor.WHITE,
+        chars.put('m', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_TOP),
                         new Pattern(DyeColor.WHITE, PatternType.TRIANGLES_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
-        chars.put('n', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
-                new Pattern(DyeColor.WHITE, PatternType.TRIANGLE_TOP),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
-        chars.put('o', getBannerMeta(DyeColor.WHITE,
+        chars.put('n', getBanner(Material.WHITE_BANNER,
+                Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
+                        new Pattern(DyeColor.WHITE, PatternType.TRIANGLE_TOP),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
+        chars.put('o', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_TOP, PatternType.STRIPE_RIGHT, PatternType.STRIPE_BOTTOM,
                         PatternType.STRIPE_LEFT)));
-        chars.put('p', getBannerMeta(DyeColor.BLACK,
+        chars.put('p', getBanner(Material.BLACK_BANNER,
                 Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.WHITE, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT))));
-        chars.put('q', getBannerMeta(DyeColor.WHITE,
+        chars.put('q', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT),
                         new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP))));
-        chars.put('r', getBannerMeta(DyeColor.BLACK,
-                Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL_MIRROR),
+        chars.put('r', getBanner(Material.BLACK_BANNER,
+                Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT),
                         new Pattern(DyeColor.WHITE, PatternType.HALF_VERTICAL),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE))));
-        chars.put('s', getBannerMeta(DyeColor.WHITE,
+        chars.put('s', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.SQUARE_TOP_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.SQUARE_BOTTOM_LEFT),
-                        new Pattern(DyeColor.WHITE, PatternType.RHOMBUS_MIDDLE),
+                        new Pattern(DyeColor.WHITE, PatternType.RHOMBUS),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT))));
-        chars.put('t', getBannerMeta(DyeColor.WHITE,
+        chars.put('t', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_CENTER, PatternType.STRIPE_TOP)));
-        chars.put('u', getBannerMeta(DyeColor.WHITE,
+        chars.put('u', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_BOTTOM, PatternType.STRIPE_RIGHT,
                         PatternType.STRIPE_LEFT)));
-        chars.put('v', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
-                new Pattern(DyeColor.WHITE, PatternType.TRIANGLE_BOTTOM),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT))));
-        chars.put('w', getBannerMeta(DyeColor.WHITE,
+        chars.put('v', getBanner(Material.WHITE_BANNER,
+                Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
+                        new Pattern(DyeColor.WHITE, PatternType.TRIANGLE_BOTTOM),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT))));
+        chars.put('w', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_BOTTOM),
                         new Pattern(DyeColor.WHITE, PatternType.TRIANGLES_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT))));
-        chars.put('x', getBannerMeta(DyeColor.WHITE,
+        chars.put('x', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT, PatternType.STRIPE_DOWNRIGHT)));
-        chars.put('y', getBannerMeta(DyeColor.WHITE,
+        chars.put('y', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT),
-                        new Pattern(DyeColor.WHITE, PatternType.HALF_VERTICAL_MIRROR),
+                        new Pattern(DyeColor.WHITE, PatternType.HALF_VERTICAL),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT))));
-        chars.put('z', getBannerMeta(DyeColor.WHITE,
+        chars.put('z', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.SQUARE_TOP_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.SQUARE_BOTTOM_RIGHT),
-                        new Pattern(DyeColor.WHITE, PatternType.RHOMBUS_MIDDLE),
+                        new Pattern(DyeColor.WHITE, PatternType.RHOMBUS),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT))));
 
-        chars.put('0', getBannerMeta(DyeColor.WHITE,
+        chars.put('0', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_TOP, PatternType.STRIPE_RIGHT, PatternType.STRIPE_BOTTOM,
                         PatternType.STRIPE_LEFT)));
-        chars.put('1', getBannerMeta(DyeColor.WHITE,
+        chars.put('1', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.SQUARE_TOP_LEFT),
                         new Pattern(DyeColor.WHITE, PatternType.BORDER),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_CENTER))));
-        chars.put('2', getBannerMeta(DyeColor.WHITE,
+        chars.put('2', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_TOP),
                         new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.SQUARE_TOP_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.SQUARE_BOTTOM_RIGHT),
-                        new Pattern(DyeColor.WHITE, PatternType.RHOMBUS_MIDDLE),
+                        new Pattern(DyeColor.WHITE, PatternType.RHOMBUS),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT))));
-        chars.put('3', getBannerMeta(DyeColor.WHITE,
+        chars.put('3', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
                         new Pattern(DyeColor.WHITE, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP))));
-        chars.put('4', getBannerMeta(DyeColor.BLACK,
+        chars.put('4', getBanner(Material.BLACK_BANNER,
                 Arrays.asList(new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.WHITE, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE))));
-        chars.put('5', getBannerMeta(DyeColor.BLACK,
-                Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL_MIRROR),
-                        new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL_MIRROR),
+        chars.put('5', getBanner(Material.BLACK_BANNER,
+                Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL_RIGHT),
+                        new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
-                        new Pattern(DyeColor.WHITE, PatternType.DIAGONAL_RIGHT_MIRROR),
+                        new Pattern(DyeColor.WHITE, PatternType.DIAGONAL_UP_RIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP))));
-        chars.put('6', getBannerMeta(DyeColor.WHITE,
+        chars.put('6', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT),
                         new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_BOTTOM),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
                         new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP))));
-        chars.put('7', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
-                new Pattern(DyeColor.WHITE, PatternType.DIAGONAL_RIGHT),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT))));
-        chars.put('8', getBannerMeta(DyeColor.WHITE,
+        chars.put('7', getBanner(Material.WHITE_BANNER,
+                Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
+                        new Pattern(DyeColor.WHITE, PatternType.DIAGONAL_RIGHT),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT))));
+        chars.put('8', getBanner(Material.WHITE_BANNER,
                 getPatterns(DyeColor.BLACK, PatternType.STRIPE_TOP, PatternType.STRIPE_LEFT, PatternType.STRIPE_RIGHT,
                         PatternType.STRIPE_MIDDLE, PatternType.STRIPE_BOTTOM)));
-        chars.put('9', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
-                new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL_MIRROR),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
-                new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
+        chars.put('9', getBanner(Material.WHITE_BANNER,
+                Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_LEFT),
+                        new Pattern(DyeColor.WHITE, PatternType.HALF_HORIZONTAL_BOTTOM),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP),
+                        new Pattern(DyeColor.BLACK, PatternType.STRIPE_RIGHT))));
 
-        chars.put('.', getBannerMeta(DyeColor.WHITE,
+        chars.put('.', getBanner(Material.WHITE_BANNER,
                 Collections.singletonList(new Pattern(DyeColor.BLACK, PatternType.SQUARE_BOTTOM_LEFT))));
-        chars.put(' ', getBannerMeta(DyeColor.WHITE, new ArrayList<Pattern>()));
-        chars.put('-', getBannerMeta(DyeColor.WHITE,
+        chars.put(' ', getBanner(Material.WHITE_BANNER, new ArrayList<Pattern>()));
+        chars.put('-', getBanner(Material.WHITE_BANNER,
                 Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.STRIPE_MIDDLE),
                         new Pattern(DyeColor.WHITE, PatternType.BORDER))));
-        chars.put(':', getBannerMeta(DyeColor.BLACK,
+        chars.put(':', getBanner(Material.BLACK_BANNER,
                 getPatterns(DyeColor.WHITE, PatternType.STRIPE_TOP, PatternType.STRIPE_LEFT, PatternType.STRIPE_RIGHT,
                         PatternType.STRIPE_MIDDLE, PatternType.STRIPE_BOTTOM)));
-        chars.put(';', getBannerMeta(DyeColor.BLACK,
+        chars.put(';', getBanner(Material.BLACK_BANNER,
                 getPatterns(DyeColor.WHITE, PatternType.STRIPE_DOWNRIGHT, PatternType.STRIPE_LEFT,
                         PatternType.STRIPE_TOP, PatternType.STRIPE_MIDDLE, PatternType.BORDER)));
 
-        chars.put('[', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.BORDER),
+        chars.put('[', getBanner(Material.WHITE_BANNER, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.BORDER),
                 new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL),
                 new Pattern(DyeColor.WHITE, PatternType.STRIPE_LEFT),
                 new Pattern(DyeColor.WHITE, PatternType.STRIPE_RIGHT))));
-        chars.put(']', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.BORDER),
-                new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL_MIRROR),
+        chars.put(']', getBanner(Material.WHITE_BANNER, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.BORDER),
+                new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL_RIGHT),
                 new Pattern(DyeColor.WHITE, PatternType.STRIPE_LEFT),
                 new Pattern(DyeColor.WHITE, PatternType.STRIPE_RIGHT))));
-        chars.put('/', getBannerMeta(DyeColor.WHITE, getPatterns(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT)));
-        chars.put('\\', getBannerMeta(DyeColor.WHITE, getPatterns(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT)));
-        chars.put('*', getBannerMeta(DyeColor.WHITE, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.CROSS),
+        chars.put('/', getBanner(Material.WHITE_BANNER, getPatterns(DyeColor.BLACK, PatternType.STRIPE_DOWNLEFT)));
+        chars.put('\\', getBanner(Material.WHITE_BANNER, getPatterns(DyeColor.BLACK, PatternType.STRIPE_DOWNRIGHT)));
+        chars.put('*', getBanner(Material.WHITE_BANNER, Arrays.asList(new Pattern(DyeColor.BLACK, PatternType.CROSS),
                 new Pattern(DyeColor.BLACK, PatternType.STRAIGHT_CROSS),
                 new Pattern(DyeColor.WHITE, PatternType.BORDER),
                 new Pattern(DyeColor.WHITE, PatternType.CURLY_BORDER))));
@@ -283,26 +289,25 @@ public final class TextualBanners {
     /**
      * Returns a banner containing the patterns with the background color.
      *
-     * @param color    The background color
+     * @param material The material
      * @param patterns The layers to be printed on the banner
      * @return An {@link ItemStack} containing these parameters
      */
-    public static ItemStack getBanner(DyeColor color, List<Pattern> patterns) {
-        ItemStack banner = new ItemStack(Material.WHITE_BANNER);
-        banner.setItemMeta(getBannerMeta(color, patterns));
+    public static ItemStack getBanner(Material material, List<Pattern> patterns) {
+        ItemStack banner = new ItemStack(material);
+        banner.setItemMeta(getBannerMeta(material, patterns));
         return banner;
     }
 
     /**
      * Returns a banner meta corresponding to these parameters.
      *
-     * @param color    The background color
+     * @param material The material
      * @param patterns The layers to be printed on the banner
      * @return An ItemMeta containing these parameters
      */
-    public static BannerMeta getBannerMeta(DyeColor color, List<Pattern> patterns) {
-        BannerMeta meta = (BannerMeta) new ItemStack(Material.WHITE_BANNER).getItemMeta();
-        meta.setBaseColor(color);
+    public static BannerMeta getBannerMeta(Material material, List<Pattern> patterns) {
+        BannerMeta meta = (BannerMeta) new ItemStack(material).getItemMeta();
         meta.setPatterns(patterns);
         return meta;
     }
@@ -360,12 +365,13 @@ public final class TextualBanners {
      * @return A banner {@link ItemStack} with the corresponding character using a basic font system
      */
     public static ItemStack getCharBanner(char c, DyeColor background, DyeColor color, boolean border) {
-        BannerMeta meta = chars.get(Character.toLowerCase(c));
+        ItemStack banner = chars.get(Character.toLowerCase(c));
 
-        if (meta == null) {
+        if (banner == null) {
             throw new IllegalArgumentException("This character can't be reproduced on a banner !");
         }
 
+        BannerMeta meta = (BannerMeta) banner.getItemMeta();
         List<Pattern> patterns = meta.getPatterns();
 
         patterns = clonePatterns(patterns);
@@ -379,7 +385,10 @@ public final class TextualBanners {
             patterns.add(new Pattern(background, PatternType.BORDER));
         }
 
-        return getBanner(meta.getBaseColor().equals(DyeColor.WHITE) ? background : color, patterns);
+        return getBanner(banner.getType() == Material.WHITE_BANNER
+                        ? Material.valueOf(background.name() + "_BANNER")
+                        : Material.valueOf(color.name() + "_BANNER"),
+                patterns);
     }
 
     /**
@@ -448,12 +457,13 @@ public final class TextualBanners {
      * @throws IllegalArgumentException if the specified item is not a banner.
      */
     public static void editBanner(ItemStack item, Banner banner) {
+        final Material type = item.getType();
         if (!item.getType().toString().endsWith("BANNER")) {
             throw new IllegalArgumentException("The specified ItemStack isn't a banner !");
         }
 
         final BannerMeta meta = (BannerMeta) item.getItemMeta();
-        banner.setBaseColor(meta.getBaseColor());
+        banner.setBaseColor(DyeColor.valueOf(type.name().replace("_BANNER", "")));
         banner.setPatterns(meta.getPatterns());
         banner.update();
     }

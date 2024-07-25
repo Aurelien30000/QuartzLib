@@ -308,16 +308,6 @@ public abstract class RawTextPart<T extends RawTextPart<T>> implements Iterable<
     }
 
     /**
-     * Adds an hover item to this component.
-     *
-     * @param item The item to display on hover.
-     * @return The current raw text component, for method chaining.
-     */
-    public T hover(ItemStack item) {
-        return hover(ActionHover.SHOW_ITEM, RawText.toJSONString(item));
-    }
-
-    /**
      * Adds an hover entity to this component.
      *
      * @param entity The entity to display on hover.
