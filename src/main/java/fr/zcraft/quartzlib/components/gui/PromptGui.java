@@ -31,17 +31,14 @@
 package fr.zcraft.quartzlib.components.gui;
 
 import fr.zcraft.quartzlib.tools.Callback;
-import fr.zcraft.quartzlib.tools.PluginLogger;
-import fr.zcraft.quartzlib.tools.reflection.Reflection;
 import fr.zcraft.quartzlib.tools.runners.RunTask;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -52,13 +49,6 @@ public class PromptGui extends GuiBase {
     private static final int SIGN_LINES_COUNT = 4;
     private static final int SIGN_COLUMNS_COUNT = 15;
 
-    private static boolean isInitialized = false;
-
-    /* ===== Reflection to Sign API ===== */
-    private static Field fieldTileEntitySign = null; // 1.11.2-: CraftSign.sign; 1.12+: CraftBlockEntityState.tileEntity
-    private static Field fieldTileEntitySignEditable = null; // 1.12+ only: CraftBlockEntityState.isEditable
-    private static Method methodGetHandle = null; // CraftPlayer.getHandle()
-    private static Method methodOpenSign = null; // EntityHuman.openSign()
     private final Callback<String> callback;
     private Location signLocation;
     private String contents;
@@ -77,24 +67,7 @@ public class PromptGui extends GuiBase {
     public PromptGui(Callback<String> callback) {
         super();
 
-        if (!isAvailable()) {
-            throw new IllegalStateException("Sign-based prompt GUI are not available");
-        }
-
         this.callback = callback;
-    }
-
-
-    /**
-     * Checks if Prompt GUIs can be correctly used on this Minecraft versions.
-     */
-    public static boolean isAvailable() {
-
-        if (!isInitialized) {
-            init();
-        }
-        return fieldTileEntitySign != null;
-
     }
 
     public static void prompt(Player owner, Callback<String> callback) {
@@ -104,58 +77,6 @@ public class PromptGui extends GuiBase {
     public static void prompt(Player owner, Callback<String> callback, String contents, GuiBase parent) {
         Gui.open(owner, new PromptGui(callback, contents), parent);
     }
-
-    private static void init() {
-        isInitialized = true;
-
-        try {
-            final Class<?> CraftBlockEntityState =
-                    Reflection.getBukkitClassByName("block.CraftBlockEntityState");
-            final Class<?> classTileEntitySign
-                    = Reflection.getMinecraft1_17ClassByName("world.level.block.entity.TileEntitySign");
-            final Class<?> CraftPlayer = Reflection.getBukkitClassByName("entity.CraftPlayer");
-            final Class<?> EntityHuman = Reflection.getMinecraft1_17ClassByName("world.entity.player.EntityHuman");
-            fieldTileEntitySign = Reflection.getField(CraftBlockEntityState, "tileEntity");
-            fieldTileEntitySignEditable = Reflection.getField(classTileEntitySign, "f");//isEditable new name
-            methodGetHandle = CraftPlayer.getDeclaredMethod("getHandle");
-            try {
-                //1.18+
-                methodOpenSign = EntityHuman.getDeclaredMethod("a", classTileEntitySign);
-                //doesn't work because despite the name found in the jar, this may be an issue from Mojang with a bad
-                //mapping. The correct name is a and not openTextEdit.
-            } catch (Exception e) {
-                methodOpenSign = EntityHuman.getDeclaredMethod("openSign", classTileEntitySign);
-            }
-        } catch (Exception ex) {
-            try {
-                final Class<?> CraftBlockEntityState =
-                        Reflection.getBukkitClassByName("block.CraftBlockEntityState");
-                final Class<?> CraftSign = Reflection.getBukkitClassByName("block.CraftSign");
-                final Class<?> classTileEntitySign = Reflection.getMinecraftClassByName("TileEntitySign");
-                final Class<?> CraftPlayer = Reflection.getBukkitClassByName("entity.CraftPlayer");
-                final Class<?> EntityHuman = Reflection.getMinecraftClassByName("EntityHuman");
-
-                try {
-                    fieldTileEntitySign = Reflection.getField(CraftSign, "sign");
-                } catch (NoSuchFieldException exc) { // 1.12+
-                    fieldTileEntitySign = Reflection.getField(CraftBlockEntityState, "tileEntity");
-                }
-
-                try {
-                    fieldTileEntitySignEditable = Reflection.getField(classTileEntitySign, "isEditable");
-                } catch (NoSuchFieldException exc) { // 1.11.2 or below
-                    fieldTileEntitySignEditable = null;
-                }
-
-                methodGetHandle = CraftPlayer.getDeclaredMethod("getHandle");
-                methodOpenSign = EntityHuman.getDeclaredMethod("openSign", classTileEntitySign);
-            } catch (Exception exc) {
-                PluginLogger.error("Unable to initialize Sign Prompt API", exc);
-                fieldTileEntitySign = null;
-            }
-        }
-    }
-
 
     private static String getSignContents(String[] lines) {
         StringBuilder content = new StringBuilder(lines[0].trim());
@@ -260,35 +181,14 @@ public class PromptGui extends GuiBase {
 
         final Sign sign = (Sign) block.getState();
         setSignContents(sign, contents);
+        sign.setWaxed(false);
         sign.update();
 
-        RunTask.later(() -> {
-            try {
-
-                final Object signTileEntity = fieldTileEntitySign.get(sign);
-                final Object playerEntity = methodGetHandle.invoke(player);
-
-                // In Minecraft 1.12+, there's a lock on the signs to avoid them
-                // to be edited after they are loaded into the game.
-                if (fieldTileEntitySignEditable != null) {
-                    fieldTileEntitySignEditable.set(signTileEntity, true);
-                }
-
-                methodOpenSign.invoke(playerEntity, signTileEntity);
-
-            } catch (final Throwable e) {
-                PluginLogger.error("Error while opening Sign prompt", e);
-            }
-        }, 3);
+        RunTask.later(() -> player.openSign(sign, Side.FRONT), 3L);
     }
 
     @Override
     protected void onClose() {
-        final Block block = signLocation.getWorld().getBlockAt(signLocation);
-        block.setType(Material.AIR);
-
-        signLocation.getWorld().getBlockAt(signLocation.clone().add(0, -1, 0)).setType(Material.AIR);
-
         super.onClose();
     }
 
