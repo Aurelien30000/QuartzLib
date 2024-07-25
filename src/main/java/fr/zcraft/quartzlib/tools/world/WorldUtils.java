@@ -66,7 +66,7 @@ public class WorldUtils {
             return BlockFace.NORTH;
         }
 
-        if (yaw <= -45 && yaw > -135) {
+        if (loc.getYaw() >= 45 && loc.getYaw() < 135) {
             return BlockFace.WEST;
         }
 
@@ -74,7 +74,7 @@ public class WorldUtils {
             return BlockFace.SOUTH;
         }
 
-        if (yaw <= 135 && yaw > 45) {
+        if (loc.getYaw() <= -45 && loc.getYaw() > -135) {
             return BlockFace.EAST;
         }
 
